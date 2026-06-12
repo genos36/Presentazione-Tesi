@@ -1,18 +1,15 @@
 #import "@preview/polylux:0.4.0": *
 #import "unipd.typ": *
 
-#show: unipd-theme
-// Or, if you want a different palette/font
-// #show: unipd-theme.with(palette: (:..unipd-palette, font: "Noto Sans Old"))
+//#show: unipd-theme
+// Altro font
+#show: unipd-theme.with(palette: (:..unipd-palette, font: "Noto Sans Old"))
 
 #title-slide(
-  authors: "Me and myself",
-  title: "Some kinda short title",
-  subtitle: lorem(12),
-  date: "February 2024",
+  authors: "Matteo Mazzaretto",
+  title: "Ideazione di una pipeline OCR locale per estrarre dati da documenti di trasporto",
+  date: "Luglio 2026",
 )
-
-#new-section-slide("Introduction")
 
 #slide(title: "Static text")[
   Here's some code:
@@ -29,9 +26,9 @@
   #lorem(20)
 
   #uncover("2-")[This appears after one slide]
-]
 
-#new-section-slide("Conclusions")
+  #uncover("4-")[Ciao brooooo]
+]
 
 #slide(title: "Qux")[
   _baz_\
@@ -39,7 +36,7 @@
   `Fuzz`
 ]
 
-#slide()[
+#slide()[   //Prende il title dalla slide precedente
   #normal-block[Normal block][body]
   #alert-block[Alert block][body]
   #example-block[Example block][
@@ -50,5 +47,5 @@
 ]
 
 #filled-slide[
-  Thank you for your attention
+  Grazie per l'attenzione!
 ]

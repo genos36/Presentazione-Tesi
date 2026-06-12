@@ -99,31 +99,12 @@
   )
 })
 
-#let slide(title: none, body) = polylux.slide({
-  header
-  v(15%) // Space for header
-  footer
-
-  if title != none {
-    v(7%)
-    let title-text = with-palette(palette => text(palette.main, title))
-    block(
-      width: 100%, inset: (x: 4.5%, y: -.5em), breakable: false,
-      outset: 0em,
-      heading(level: 1, title-text)
-    )
-    v(.7em)
-  }
-
-  v(1fr)
-  block(width: 100%, inset: (x: 2em), body)
-  v(2fr)
-})
-
 #let new-section(title) = toolbox.register-section(title)
 
-#let new-section-slide(title) = polylux.slide({
-  new-section(title)
+#let slide(title: none, body) = polylux.slide({
+  if title != none {
+    new-section(title)
+  }
   
   header
   footer
@@ -131,6 +112,10 @@
   set align(center + horizon)
   let titletext = with-palette(palette => text(palette.main, title))
   heading(level: 2, titletext)
+
+  v(1fr)
+  block(width: 100%, inset: (x: 2em), body)
+  v(2fr)
 })
 
 #let filled-slide(content) = polylux.slide(with-palette(palette => {
