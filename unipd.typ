@@ -6,10 +6,10 @@
   gray: rgb(72, 79, 89),
   light-gray: rgb(237, 237, 238),
   font: "New Computer Modern Sans",
-  header-logo: "logo_text_white.png",
-  title-background: "bg.svg",
-  background-logo: "logo_text.png",
-  footer-wave: "bg_wave.svg",
+  header-logo: "template_images/logo_text_white.png",
+  title-background: "template_images/bg.svg",
+  background-logo: "template_images/logo_text.png",
+  footer-wave: "template_images/bg_wave.svg",
 )
 
 #let palette-state = state("unipd-theme-palette", unipd-palette)
@@ -92,9 +92,11 @@
     bottom + right, dx: -2.5%, dy: -2.5%,
     text(
       size: 18pt,
-      fill: palette.main.lighten(50%)
+      fill: white,
     )[
-      #toolbox.slide-number of #toolbox.last-slide-number
+      Matteo Mazzaretto -
+      Ideazione di una pipeline OCR -
+      #toolbox.slide-number di #toolbox.last-slide-number
     ]
   )
 })
@@ -147,5 +149,15 @@
     make_block_fn(palette => palette.gray),
     make_block_fn(palette => palette.main),
     make_block_fn(_ => rgb(0, 128, 0)),
+  )
+}
+
+#let path = "./images/"
+
+#let img(name, caption: none, width: auto, height: auto, alt: none, fit: "contain") = {
+  let full = path + name
+  figure(
+    image(full, width: width, height: height, alt: alt, fit: fit),
+    caption: caption,
   )
 }
