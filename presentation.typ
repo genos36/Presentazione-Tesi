@@ -17,12 +17,7 @@
     img("logo_azienda.svg"),
     [*Problema*], [Estrarre dati da fonti semi-strutturate],
     grid.cell(rowspan: 3)[
-      #align(center + horizon)[
-        #stack(
-          spacing: 1em,
-          img("example-ddt.png")
-        )
-      ]
+      #img("example-ddt.png")
     ],
     [*Attualità*], [Sistema basato su LLM/API esterne a pagamento],
     [*Soluzione*], [Pipeline di OCR locale basata su soluzioni algoritmiche],
@@ -36,8 +31,8 @@
     column-gutter: 1em,
     align: center + horizon,
     img("technologies/html_css_js.png", width: 8cm, height: 4cm),
-    img("technologies/python.png", width: 8cm, height: 4cm),
-    img("technologies/flask.svg", width: 8cm, height: 4cm),
+    img("technologies/python.png", width: 25%),
+    img("technologies/flask.svg", width: 50%),
     img("technologies/docker.png", width: 8cm, height: 4cm),
   )
   #v(0.5em)
@@ -134,6 +129,16 @@
   ]
 ]
 
+#slide(title: "Problematiche da risolvere")[
+  #align(left)[
+    #set list(spacing: 1.5em)
+    - Costruzione del template
+    - Gestire l'inclinazione dei DDT e la loro rotazione
+    - Gestire i fornitori con diversi template
+    - Gestire l'estrazione degli articoli
+  ]
+]
+
 #slide(title: "Interfaccia grafica")[
   #grid(
     columns: (auto, auto),
@@ -142,13 +147,6 @@
     [*Estrazione* di un DDT], img("example/estrazione-ddt.png"),
     [*Creazione* di un template], img("example/costruzione-template.png"),
   )
-]
-
-#slide(title: "Problematiche da risolvere")[
-  - Costruzione del template
-  - Gestione dei rettangoli disegnati male
-  - Gestire l'inclinazione dei DDT e la loro rotazione (a voce oppure codice, parlo di rilevamento rotazione e deskewing)
-  - Gestire i fornitori con diversi template
 ]
 
 #slide(title: "Costruzione del template")[
@@ -163,18 +161,46 @@
   )
 ]
 
+#slide(title: "Gestire i fornitori con diversi template")[
+  #align(left)[
+    #show raw: set text(size: 0.8em)
+    ```
+    function select_best_template(variants, words):
+      if variants has one element:
+          return load(variants[0], words)
+
+      best = none
+      for variant in variants:
+          anchor = variant.anchor
+          expected = anchor.center()
+          found = variant.find_anchor(words)
+          if found is none:
+              continue
+          distance = expected.distance_to(found)
+          if distance < best.distance:
+              best = variant
+
+      if best is none:
+          return none
+
+      best.apply_anchor_offset(words)
+      return best
+    ```
+  ]
+]
+
 #slide(title: "Estrazione: concetti chiave")[
   #align(left)[
     *Estrazione delle parole nel rettangolo*\
     ```
     function words_in_rect(bounding_box, words):
-    found = []
-    for word in words:
-        if not word.overlaps(bounding_box):
-            continue
-        if word.overlap_size(bounding_box).x >= MIN_OVERLAP_RATIO:
-            found.append(word)
-    return found
+      found = []
+      for word in words:
+          if not word.overlaps(bounding_box):
+              continue
+          if word.overlap_size(bounding_box).x >= OVERLAP_RATIO:
+              found.append(word)
+      return found
     ```
   ] 
 ]
@@ -185,19 +211,19 @@
     #show raw: set text(size: 0.9em)
     ```
     function group_lines_by_quantity(lines, quantity_box):
-    groups = []
-    current = none
-    for line in lines:
-        if line.has_summary_keyword():
-            break
-        if line.has_quantity(quantity_box):
-            if current != none:
-                groups.append(current)
-            current = new_group(line)
-        else:
-            current.extend(line)
-    groups.append(current)
-    return groups
+      groups = []
+      current = none
+      for line in lines:
+          if line.has_summary_keyword():
+              break
+          if line.has_quantity(quantity_box):
+              if current != none:
+                  groups.append(current)
+              current = new_group(line)
+          else:
+              current.extend(line)
+      groups.append(current)
+      return groups
     ```
   ]
 ]
