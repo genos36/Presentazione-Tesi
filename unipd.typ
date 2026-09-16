@@ -94,8 +94,8 @@
       size: 18pt,
       fill: white,
     )[
-      Matteo Mazzaretto -
-      Ideazione di una pipeline OCR -
+      Davide Lorenzon -
+      Valutazione di pgvector -
       #toolbox.slide-number di #toolbox.last-slide-number
     ]
   )

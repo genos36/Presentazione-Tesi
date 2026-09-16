@@ -1,3 +1,5 @@
 # For simplifying testing
 *.pdf
 Discorso.txt
+
+images/meme/*

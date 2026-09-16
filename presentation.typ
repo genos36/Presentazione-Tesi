@@ -4,273 +4,268 @@
 #show: unipd-theme.with(palette: (:..unipd-palette, font: "Noto Sans Old"))
 
 #title-slide(
-  authors: "Matteo Mazzaretto",
-  title: "Ideazione di una pipeline OCR locale per estrarre dati da documenti di trasporto",
-  date: "14 Luglio 2026",
+  authors: "Davide Lorenzon",
+  title: "Valutazione di pgvector come database unificato per architetture RAG",
+  date: "22 Settembre 2026",
 )
 
-#slide(title: "L'azienda e il progetto")[
+#slide(title: "Il problema di partenza")[
+  #v(1em)
   #grid(
-    columns: (auto, auto, auto),
-    rows: (20%, 20%, 20%, 20%),
-    inset: 8pt,
-    img("logo_azienda.svg"),
-    [*Problema*], [Estrarre dati da fonti semi-strutturate],
-    grid.cell(rowspan: 3)[
-      #img("example-ddt.png")
+    align: horizon+center,
+    columns: (1fr, 3fr),
+    rows: (2fr, 1fr, 1fr, 1fr,1.5fr,),
+    inset: 1em,
+    img("logo-azienda.svg"),[#image("images/example/poliglot.drawio.png", height: 100%)],
+    [*Problema*], [*Information retrieval* in un contesto relazionale],
+    [*Soluzione attuale*], [*Postgres* + *Elasticsearch* per la ricerca],
+    grid.cell()[*Criticità*],
+    [
+    #sym.bullet *Overhead* di sincronizzazione e comunicazione
+    
+    #sym.bullet *Join* lato backend
     ],
-    [*Attualità*], [Sistema basato su LLM/API esterne a pagamento],
-    [*Soluzione*], [Pipeline di OCR locale basata su soluzioni algoritmiche],
-    [*Benefici*], [Soluzione deterministica, abbattimento dei costi operativi]
   )
 ]
 
-#slide(title: "Tecnologie utilizzate")[
+#slide(title: "Alternativa da valutare")[
+  #v(1em)
   #grid(
-    columns: (1fr, 1fr),
-    column-gutter: 1em,
-    align: center + horizon,
-    img("technologies/html_css_js.png", width: 8cm, height: 4cm),
-    img("technologies/python.png", width: 25%),
-    img("technologies/flask.svg", width: 50%),
-    img("technologies/docker.png", width: 8cm, height: 4cm),
+    columns: (1.75fr, 1fr,1fr),
+    rows: (1fr, 1fr, 1fr, 1fr),
+    inset: 0.5em,
+    align: center,
+    grid.cell(rowspan:4, align: top)[
+      #text("Pgvector", size: 1.8em, weight:"bold")
+      #image("/images/example/unified.drawio.png", height: 50%)
+      
+    ],[*Perché adesso*], [Avanzamento di *pgvector*],
+
+// [*Tecnologie*], [*pgvector* + *full-text nativa*], 
+[*Da valutare*], [*Fattibilità* tecnica e *performance*],
+grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB esterni]],
+
+
+
+
   )
-  #v(0.5em)
-  #align(center)[*DocTR - Document Text Recognition*]
-  #v(0.5em)
+]
+
+
+#slide(title: "Altri vincoli tecnologici")[
+  #box(height:80%)[
+  #grid(
+    columns: (1fr,1fr),
+    rows: (1fr, 1fr),
+    inset: 0.5em,
+    align: center,
+    [Python #image(height:4em,"images/example/python.png")],
+    [FastAPI#image(height:4em,"images/example/fastapi.svg")],
+    [Grafana#image(height:4em, "images/example/Grafana_logo.svg.webp")],
+    [full-text search nativa#image(height:4em,"images/example/postgres.png")],
+  )
+
+]
+
+
+
+]
+
+#slide(title: "Contesto")[
+  
+  #box(height: 80%)[#grid(
+    align: horizon+center,
+    columns: (1fr, 1fr),
+    rows: (2fr, 1fr,1fr),
+    inset: 0em,
+    grid.cell(colspan:2)[#image("images/example/er.drawio.png", width: 80%)],
+    grid.cell(rowspan: 2)[*Ricerca linked*], [Interroga *tutte le entità* e ricostruisce il contesto],
+    // [*Modello dati*], [Ticket, conversation item, attachment ],
+   [È il caso d'uso che rende *Elasticsearch* inadatto],
+  )]
+]
+
+
+#slide(title: "Tre modalità di ricerca")[
   #grid(
     columns: (1fr, 1fr, 1fr),
     column-gutter: 1em,
     align: center + horizon,
-    [Basata su transformer e reti neurali convoluzionali],
-    [Progettata per il riconoscimento di testo nei documenti],
-    [Rilevamento righe, parole e coordinate]
+    inset: 8pt,
+    [*Semantica*], [*Full-text*], [*Ibrida*],
+    [Similarità sui vettori di *embedding*],
+    [Corrispondenza *lessicale*],
+    [Fusione delle due tramite *RRF*],
+
   )
 ]
 
-#slide(title: "User Journey")[
+
+#slide(title: "Benefici attesi e vincoli previsti")[
+  #set list(spacing: 2em)
+  #grid(
+    inset:1em,
+    align:left+top,
+    columns:(1fr,1fr),
+    rows:(1fr,4fr),
+      grid.cell(align:center+horizon)[*Benefici attesi*],
+      grid.cell(align:center+horizon)[*Vincoli*],
+      [
+      - Stack *semplificato*
+      - *Linking* lato DB
+      - Integrazione più semplice su DB esistenti
+      - Proprietà *ACID*
+      ],
+      [
+      - Solo *full-text nativo* (no dipendenze premature)
+      - *Pgvector*
+      - Testo ricercabile diviso in *chunk*
+      - Più campi ricercabili per entità
+      ]
+  
+  )
+]
+
+
+#slide(title: "Ricerca semantica")[
+#box(height: 80%)[  #grid(
+    columns: (1fr, 1fr),
+    rows:(1fr,1fr,1fr,1fr,1fr),
+    column-gutter: 1em,
+    align: left + horizon,
+    inset: 8pt,
+    [*Tabella chunk* di supporto],
+    grid.cell(align:center,rowspan:5)[
+      #image("images/example/semantica.drawio.png")
+    ],
+    [*Partizionamento* su field_name],
+    [Indice *HNSW* su bit vector],
+    [*Denormalizzazione* dei campi filterable],
+    [*Oversampling* e *rescoring*],
+  )]
+]
+#slide(title: "Ricerca full-text")[
+#box(height: 80%)[  #grid(
+    columns: (1fr, 1fr),
+    rows:(1fr,1fr,1fr,1fr),
+    column-gutter: 1em,
+    align: left + horizon,
+    inset: 8pt,
+    [Non il focus principale ma comunque necessaria alla valutazione],
+    grid.cell(align:center,rowspan:4)[
+      #image("images/example/semantica.drawio.png")
+    ],
+    [Indice *GIN*],
+    [Punteggi sempre *comparabili*],
+    [Esplorati workaround],
+  )]
+]
+
+
+
+
+
+
+#slide(title: "Limiti della ricerca full-text")[
   #set align(center + horizon)
   #grid(
-    columns: (1fr, auto, 1fr, auto, 1fr),
-    column-gutter: 0.5em,
-    align: center + horizon,
-    box(
-      stroke: 1pt + black,
-      radius: 4pt,
-      inset: 10pt,
-      width: 100%,
-    )[
-      *1. Creazione template* \
-      #text(size: 0.8em)[L'utente configura il template per il fornitore]
-    ],
-    text(size: 1.5em)[→],
-    box(
-      stroke: 1pt + black,
-      radius: 4pt,
-      inset: 10pt,
-      width: 100%,
-    )[
-      *2. Caricamento DDT* \
-      #text(size: 0.8em)[Il PDF viene caricato e processato]
-    ],
-    text(size: 1.5em)[→],
-    box(
-      stroke: 1pt + black,
-      radius: 4pt,
-      inset: 10pt,
-      width: 100%,
-    )[
-      *3. Visualizza estrazione* \
-      #text(size: 0.8em)[L'utente controlla i dati estratti]
-    ],
+    columns: (1fr, 1fr, ),
+    column-gutter: 1em,
+    inset: 8pt,
+    [Nessuno scoring BM25: accettato],
+    [Granularità dello scoring: Combinazioni di funzioni semplici],
+    [Filtering granulare: Overlap tra array di lessemi],
+    [Performance: Accettato],
+
+
+
+    // box(stroke: 1pt + black, radius: 4pt, inset: 10pt, width: 100%)[
+    //   Nessun *BM25* nativo \ → ranking sommato manualmente
+    // ],
+    // box(stroke: 1pt + black, radius: 4pt, inset: 10pt, width: 100%)[
+    //   Nessuna *soglia minima* \ → filtro su array ordinati
+    // ],
+    // box(stroke: 1pt + black, radius: 4pt, inset: 10pt, width: 100%)[
+    //   Nessuna *fusione ibrida* \ → RRF costruito a mano
+    // ],
   )
 ]
 
-#slide(title: "Requisiti principali")[
+#slide(title: "Sistema di test")[
   #grid(
     columns: (1fr, 1fr),
     column-gutter: 2em,
     row-gutter: 0.6em,
-    [*Funzionali*], [*Di vincolo*],
-    grid.cell(align: left)[- Indicatori di affidabilità dei risultati], grid.cell(align: left)[- Pipeline OCR completamente locale],
-    grid.cell(align: left)[- Supporto a template DDT multipli], grid.cell(align: left)[- Distribuzione tramite Docker],
-    grid.cell(align: left)[- Gestione di rotazione, contrasto e rumore dei PDF], grid.cell(align: left)[- Gestione di PDF multipagina],
+    align: center + horizon,
+    inset: 8pt,
+    [*Locust* \ simula utenti paralleli],
+    [*Grafana* \ dashboard collegata a Postgres],
+    [*Metriche* \ hit rate, MRR, latenza],
+    [*Ground truth* \ da dati sintetici],// TODO
+    grid.cell(colspan:2,image("images/example/image.png", height: 30%))
   )
+  
 ]
 
-#slide(title: "Approcci iniziali")[
-  #grid(
+#slide(title: "Risultati: cosa ha funzionato")[
+  #box(height: 80%)[#grid(
+    columns: (1fr, 1fr),
+    rows:(2.5fr,1fr,1fr,1fr),
+    column-gutter: 1.5em,
+    align: center + horizon,
+    inset: 2em,
+    grid.cell(colspan:2,align:bottom)[*Volume dati*:10.000 ticket, 50.000 conversation item, 60.000 attachment],
+    grid.cell()[*Ricerca semantica* \ 200-300ms, *confermata*],
+    grid.cell()[*Fusione ibrida* \ semplice ed efficace lato DB],
+    [],[],
+    grid.cell(colspan:2,align:bottom)[
+      
+      *Linking* \ join performanti su chiave primaria],
+    [ // TODO: quarto punto, o passa a 2x1 se ne hai solo 3
+    ],
+  )]
+]
+#slide(title: "Risultati: cosa non ha funzionato")[
+  #box(height: 80%)[#grid(
     columns: (1fr, 1fr),
     column-gutter: 1.5em,
-    align: left + horizon,
-    [
-      + Estrarre con OCR il testo;
-      + Ricavare i dati con regular expression.
-    ],
-    [
-      #table(
-        columns: (50%, 50%),
-        align: center + horizon,
-        [*Numero colli*], [1],
-        [*Peso lordo*], [1.0KG]
-      )
-      #v(0.5em)
-      #table(
-        columns: (50%, 50%),
-        align: center + horizon,
-        [*Numero colli*], [*Peso lordo*],
-        [1], [1.0KG]
-      )
-    ]
-  )
-  #v(1em)
-  #align(center)[
-    Problema: le RegExp non hanno conoscenza spaziale del testo.
-  ]
-]
+    align: center + horizon,
+    inset: 2em,
+        grid.cell(colspan:2,align:bottom)[*Volume dati*:10.000 ticket, 50.000 conversation item, 60.000 attachment],
 
-#slide(title: "Problematiche da risolvere")[
-  #align(left)[
-    #set list(spacing: 1.5em)
-    - Costruzione del template
-    - Gestire l'inclinazione dei DDT e la loro rotazione
-    - Gestire i fornitori con diversi template
-    - Gestire l'estrazione degli articoli
-  ]
-]
-
-#slide(title: "Interfaccia grafica")[
-  #grid(
-    columns: (auto, auto),
-    rows: (35%, 35%),
-    column-gutter: 1em,
-    [*Estrazione* di un DDT], img("example/estrazione-ddt.png"),
-    [*Creazione* di un template], img("example/costruzione-template.png"),
-  )
-]
-
-#slide(title: "Costruzione del template")[
-  #img("example/corpo-template.png")
-]
-
-#slide(title: "Deskewing")[
-  #grid(
-    rows: (40%, 40%),
-    img("deskew/pre-deskew.png", height: 90%),
-    img("deskew/post-deskew.png", height: 90%),
-  )
-]
-
-#slide(title: "Gestire i fornitori con diversi template")[
-  #align(left)[
-    #show raw: set text(size: 0.8em)
-    ```
-    function select_best_template(variants, words):
-      if variants has one element:
-          return load(variants[0], words)
-
-      best = none
-      for variant in variants:
-          anchor = variant.anchor
-          expected = anchor.center()
-          found = variant.find_anchor(words)
-          if found is none:
-              continue
-          distance = expected.distance_to(found)
-          if distance < best.distance:
-              best = variant
-
-      if best is none:
-          return none
-
-      best.apply_anchor_offset(words)
-      return best
-    ```
-  ]
-]
-
-#slide(title: "Estrazione: concetti chiave")[
-  #align(left)[
-    *Estrazione delle parole nel rettangolo*\
-    ```
-    function words_in_rect(bounding_box, words):
-      found = []
-      for word in words:
-          if not word.overlaps(bounding_box):
-              continue
-          if word.overlap_size(bounding_box).x >= OVERLAP_RATIO:
-              found.append(word)
-      return found
-    ```
-  ] 
-]
-
-#slide()[
-  #align(left)[
-    *Raggruppamento articoli per quantità*\
-    #show raw: set text(size: 0.9em)
-    ```
-    function group_lines_by_quantity(lines, quantity_box):
-      groups = []
-      current = none
-      for line in lines:
-          if line.has_summary_keyword():
-              break
-          if line.has_quantity(quantity_box):
-              if current != none:
-                  groups.append(current)
-              current = new_group(line)
-          else:
-              current.extend(line)
-      groups.append(current)
-      return groups
-    ```
-  ]
+    [*Full-text* \ 5-10s],
+    [*Answer rate 100%* \ ma su dataset di test],
+    grid.cell(colspan: 2)[*No Block-Max WAND* \ non replicabile in Postgres],
+  )]
 ]
 
 
-#slide(title: "Conclusioni")[
-  #grid(
-    columns: (35%, 60%),
-    column-gutter: 1em,
-    row-gutter: 1em,
-    [
-      #set text(size: 0.75em)
-      #stack(
-        spacing: 0.3em,
-        box(stroke: 1pt + black, radius: 4pt, inset: 8pt, width: 100%)[*Onboarding*],
-        align(center)[#text(size: 1.3em)[↓]],
-        box(stroke: 1pt + black, radius: 4pt, inset: 8pt, width: 100%)[*Approccio regex*],
-        align(center)[#text(size: 1.3em)[↓]],
-        box(stroke: 1pt + black, radius: 4pt, inset: 8pt, width: 100%)[*Sviluppo GUI estrazione*],
-        align(center)[#text(size: 1.3em)[↓]],
-        box(stroke: 1pt + black, radius: 4pt, inset: 8pt, width: 100%)[*Sviluppo GUI template*],
-        align(center)[#text(size: 1.3em)[↓]],
-        box(stroke: 1pt + black, radius: 4pt, inset: 8pt, width: 100%)[*Testing template*],
-      )
-    ],
-    [
-      #grid(
-        columns: (1.2fr, 1fr, 1fr, 1fr),
-        stroke: 1pt + black,
-        inset: 6pt,
-        align: center + horizon,
-        [*Tipo*], [*Obb*], [*Des*], [*Opz*],
-        [Funzionale], [146/146], [1/1], [4/4],
-        [Qualità], [1/1], [0/0], [0/0],
-        [Vincolo], [4/4], [0/0], [2/2]
-      )
-    ],
-    grid.cell(colspan: 2)[
-      Testando l'algoritmo su tutti i DDT di esempio disponibili, il numero di
-      articoli estratti risulta corretto nel *99,04%* dei casi.\
-      Questo dato non garantisce però che ogni singolo campo sia esatto: da un
-      controllo manuale a campione, stimo l'affidabilità reale più vicina
-      all'*80-90%*.
-    ]
-  )
-]
+
+
+// #slide(title: "Conclusioni")[
+//   #columns(2,
+//     [
+//       *Vantaggi*
+//       - *pgvector* valido per ricerca semantica/ibrida
+//       - Stack *unificato*, meno overhead
+
+//       #colbreak()
+
+//       *Limiti e sviluppi futuri*
+//       - Full-text *più lento* di Elasticsearch
+//       - Estendere i test a tutte le tipologie
+//     ],
+//   )
+
+//   Possibili soluzioni:
+
+//   Utilizzare estensioni specializzate (*ParedeDB*)
+
+//   Rivedere il ruolo della ricerca full-text
+// ]
 
 #filled-slide[
-  Grazie per l'attenzione!
+  #align(center)[#box(fill:color.white,stroke:color.black+2pt,inset: 0em)[#image("images/meme-pg.png",height: 60%)]]
+  Grazie per l'attenzione! \
+  Domande?
 ]
