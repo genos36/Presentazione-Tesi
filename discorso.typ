@@ -138,5 +138,23 @@ Il calcolo avviene su un Db postgres, gestisce facilmente storicizzazione dei lo
 
 la ground truth viene passata insieme alle query di test, per i test svolti e stata generata a partire dai dati inseriti ne sistema
 
+= Slide 12
+
+il volume di test dei dati di test è questo, non è un volume dati grande quanto quello di un'azienda vedremo dopo perché i test non sono continuati su volumi più grandi
+
+ma è abbastanza grande da fornire dei risultati validi,ù
+
+la ricerca smenatica di pgvector è stata confermata, è possibile fare la fusione rrf lato  db, la ricerca linked è implementabile lato  DB
 
 
+= Slide 13
+
+i test non sono continuati perchè questo volume dati ha già fatto emergere delle criticità sul lato full-text che ha dei tempi di ricerca significativamente più altri
+
+perciò per usare unicamente postgres come motore di ricerca è necessario valutare meglio l'applicabilità di estensioni dedicate oppure ripensare come la full- text partecipa alla ricerca
+
+
+
+= slide 14 
+
+in conclusione pgvector è valido

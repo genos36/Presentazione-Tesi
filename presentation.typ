@@ -87,8 +87,10 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
 
 
 #slide(title: "Tre modalità di ricerca")[
+#box(height: 80%)[  
   #grid(
     columns: (1fr, 1fr, 1fr),
+    rows:(1fr,1fr,5fr),
     column-gutter: 1em,
     align: center + horizon,
     inset: 8pt,
@@ -96,8 +98,11 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     [Similarità sui vettori di *embedding*],
     [Corrispondenza *lessicale*],
     [Fusione delle due tramite *RRF*],
-
+    [#image("images/searches/sem.png")],
+    [#image("images/searches/full.png")],
+    [#image("images/searches/rrf.png")],
   )
+]
 ]
 
 
@@ -168,14 +173,29 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
 
 #slide(title: "Limiti della ricerca full-text")[
   #set align(center + horizon)
+  #box(height: 75%)[
+
+
   #grid(
     columns: (1fr, 1fr, ),
+    rows:(1fr,1fr,1fr,1fr),
     column-gutter: 1em,
     inset: 8pt,
     [Nessuno scoring BM25: accettato],
     [Granularità dello scoring: Combinazioni di funzioni semplici],
     [Filtering granulare: Overlap tra array di lessemi],
     [Performance: Accettato],
+    grid.cell(colspan: 2)[*Alternative valutate*],
+    [
+      *pg_text_search*
+    
+      Buone premesse ma troppo poco maturo
+    ], 
+    [
+      *ParedeDB*
+
+      Licenza non compatibile per questo progetto
+    ]
 
 
 
@@ -189,6 +209,7 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     //   Nessuna *fusione ibrida* \ → RRF costruito a mano
     // ],
   )
+]
 ]
 
 #slide(title: "Sistema di test")[
@@ -215,29 +236,44 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     align: center + horizon,
     inset: 2em,
     grid.cell(colspan:2,align:bottom)[*Volume dati*:10.000 ticket, 50.000 conversation item, 60.000 attachment],
-    grid.cell()[*Ricerca semantica* \ 200-300ms, *confermata*],
-    grid.cell()[*Fusione ibrida* \ semplice ed efficace lato DB],
-    [],[],
-    grid.cell(colspan:2,align:bottom)[
-      
-      *Linking* \ join performanti su chiave primaria],
-    [ // TODO: quarto punto, o passa a 2x1 se ne hai solo 3
-    ],
+    grid.cell()[*Ricerca semantica* \ 200-300ms \ *confermata*],
+    grid.cell()[*Linking* incluso nella misurazione],
   )]
 ]
+
 #slide(title: "Risultati: cosa non ha funzionato")[
+  #box(height: 80%, width: 100%)[#grid(
+    columns: (1fr, 2fr),
+    column-gutter: 1.5em,
+    align: center + horizon,
+    inset: 1em,
+        grid.cell(colspan:2,align:bottom)[*Volume dati*:10.000 ticket, 50.000 conversation item, 60.000 attachment],
+
+    [*Full-text* \ (e *ibrida*) \ 5-10s una volta ottimizzata],
+    grid.cell(rowspan:2)[#image("images/ingestion tme.jpeg",width: 100%)],
+
+    grid.cell()[*No Block-Max WAND* \ non replicabile senza estensioni]
+
+  )]
+]
+
+
+
+
+#slide(title: "Valutazione finale")[
   #box(height: 80%)[#grid(
     columns: (1fr, 1fr),
     column-gutter: 1.5em,
     align: center + horizon,
     inset: 2em,
-        grid.cell(colspan:2,align:bottom)[*Volume dati*:10.000 ticket, 50.000 conversation item, 60.000 attachment],
-
-    [*Full-text* \ 5-10s],
     [*Answer rate 100%* \ ma su dataset di test],
-    grid.cell(colspan: 2)[*No Block-Max WAND* \ non replicabile in Postgres],
+    [L'accuratezza dipende da fattori trasversali],
+    [Utile principalmente alla *diagnostica*], 
+    [Accuratezza in un contesto reale, probabilmente più bassa: *80%* circa],
+    grid.cell(colspan: 2)[Definizione della *ground truth* non banale]
   )]
 ]
+
 
 
 
