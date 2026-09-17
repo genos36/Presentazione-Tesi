@@ -41,7 +41,6 @@
       
     ],[*Perché adesso*], [Avanzamento di *pgvector*],
 
-// [*Tecnologie*], [*pgvector* + *full-text nativa*], 
 [*Da valutare*], [*Fattibilità* tecnica e *performance*],
 grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB esterni]],
 
@@ -80,7 +79,6 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     inset: 0em,
     grid.cell(colspan:2)[#image("images/example/er.drawio.png", width: 80%)],
     grid.cell(rowspan: 2)[*Ricerca linked*], [Interroga *tutte le entità* e ricostruisce il contesto],
-    // [*Modello dati*], [Ticket, conversation item, attachment ],
    [È il caso d'uso che rende *Elasticsearch* inadatto],
   )]
 ]
@@ -169,37 +167,6 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
 
 
 
-
-
-// #slide(title: "Limiti della ricerca full-text")[
-//   #set align(center + horizon)
-//   #box(height: 75%)[
-
-
-//   #grid(
-//     columns: (1fr, 1fr, ),
-//     rows:(1fr,1fr,1fr,1fr),
-//     column-gutter: 1em,
-//     inset: 8pt,
-//     [Nessuno scoring BM25: accettato],
-//     [Granularità dello scoring: Combinazioni di funzioni semplici],
-//     [Filtering granulare: Overlap tra array di lessemi],
-//     [Performance: Accettato],
-//     grid.cell(colspan: 2)[*Alternative valutate*],
-//     [
-//       *pg_text_search*
-    
-//       Buone premesse ma troppo poco maturo
-//     ], 
-//     [
-//       *ParedeDB*
-
-//       Licenza non compatibile per questo progetto
-//     ]
-//   )
-// ]
-// ]
-
 #slide(title: "Sistema di test")[
   #grid(
     columns: (1fr, 1fr),
@@ -230,14 +197,14 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     [*Utenti paralleli* \ test tramite *Locust*],
     [*Data visualization* \ tramite *dashboard Grafana*],
     grid.cell(colspan: 3)[
-    #box(width: 100%,height:75%,stroke: luma(90%),inset:0.4em, radius: 16pt)[*Anser Rate* \ ground truth compare nei risultati \ 100% ]
+    #box(width: 100%,height:65%,stroke: luma(90%),inset:0.4em, radius: 16pt)[*Anser Rate* \ ground truth nei risultati 100% ]
 ],
     grid.cell(colspan: 2)[
-    #box(width: 100%,height:75%,stroke: luma(90%),inset:0.4em, radius: 16pt)[*Latency* \ tempo tra richiesta e risposta \ < 300ms ]
+    #box(width: 100%,height:65%,stroke: luma(90%),inset:0.4em, radius: 16pt)[*Latency* \ tempo tra richiesta-risposta < 300ms ]
 ],
 )]
 
-#place(dy:0%-5pt)[#block(width: 70%)[La ground truth è stata costruita automaticamente a partire dal \ dataset]]
+#place(dy:0%-5pt)[#block(width: 100%)[La ground truth è stata costruita automaticamente a partire dal dataset]]
 
 ]
 
@@ -251,25 +218,23 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     column-gutter: 1.5em,
     align: center + horizon,
     inset: 0em,
-    grid.cell(colspan: 2)[#box(inset:0.4em, radius: 16pt,fill:luma(99%),stroke: color.black)[ElasticSearch \ + join esterne] #sym.arrow.long #box(inset:0.4em, radius: 16pt,fill:luma(99%),stroke: color.black)[Postgres/pgvector \ + join integrate]] ,
-    grid.cell(rowspan: 3)[Latency \ 200-300 ms],[Linking all'interno della stessa query SQL: *nessun round-trip aggiuntivo*],
-    [Ricerche tramite singola query: *database interrogato una sola volta*],
-    [Il *linking relazionale è integrato* nella pipeline di retrieval]
+    grid.cell(colspan: 2)[
+      #grid(
+        columns:(1fr,1em,1fr), 
+      box(inset:0.4em, radius: 16pt,fill:luma(99%),stroke: color.black)[
+      ElasticSearch \ + join esterne] , 
+      align(horizon+center)[#text(size:2em,sym.arrow.long)],
+      box(inset:0.4em, radius: 16pt,fill:luma(99%),stroke: color.black)[Postgres/pgvector \ + join integrate]
+      )      
+      ] ,
+    grid.cell(rowspan: 3)[#box(inset:0.4em, radius: 16pt,fill:luma(99%),stroke: color.black,height: 40%, width: 100%)[*Latency* \ *200-300ms*]],
+    grid.cell(align: left)[- Linking all'interno della stessa query SQL: *nessun round-trip aggiuntivo*],
+    grid.cell(align: left)[- Ricerche tramite singola query: *database interrogato una sola volta*],
+    grid.cell(align: left)[- Il *linking relazionale è integrato* nella pipeline di retrieval]
   )]
-  #place()[Eliminati overhead di sincronizzazione \ e join lato backend di ElasticSearch]
+  #place()[No overhead di sincronizzazione e join lato backend di ElasticSearch]
 ]
-// #slide(title: "Risultati: Semantica e linking")[
-//   #box(height: 80%)[#grid(
-//     columns: (1fr, 1fr),
-//     rows:(2.5fr,1fr,1fr,1fr),
-//     column-gutter: 1.5em,
-//     align: center + horizon,
-//     inset: 2em,
-//     grid.cell(colspan:2,align:bottom)[*Volume dati*:10.000 ticket, 50.000 conversation item, 60.000 attachment],
-//     grid.cell()[*Ricerca semantica* \ 200-300ms \ *confermata*],
-//     grid.cell()[*Linking* incluso nella misurazione],
-//   )]
-// ]
+
 
 #slide(title: "Limiti della ricerca full-text")[
   #let card(contenuto)=box(
@@ -286,17 +251,17 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     column-gutter: 1.5em,
     align: center + horizon,
     inset: 0em,
-    card()[Postgres \ non ottimizzata per lingua \ 5-10s],
-    card()[Postgres \ ottimizzato per lingua \ #sym.tilde 3s],
-    card()[Pgvector \ ricerca semantica \ < 300ms],
+    card()[*Postgres* \ non ottimizzata per lingua \ *5-10s*],
+    card()[*Postgres* \ ottimizzato per lingua \ #sym.tilde *3s*],
+    card()[*Pgvector* \ ricerca semantica \ *< 300ms*],
     grid.cell(colspan: 3)[
       #columns(2)[
-    - Limite strutturale Postgres non offre le funzionalità dei motori full-text (BM25, ranking, filtering, Block MAX WAND)
-    - Workaround Implementate funzioni di ranking e operazioni sugli array (overlap)]
-    - Conseguenza: Ricerca full-text collo di bottiglia nella ricerca ibrida      
+    - *Limite strutturale* Postgres non offre le funzionalità dei motori full-text (BM25, ranking, filtering, Block MAX WAND)
+    - *Workaround*: Implementate funzioni di ranking e operazioni sugli array (overlap)]
+    - *Conseguenza*: Ricerca full-text collo di bottiglia nella ricerca ibrida      
     ],
     grid.cell(colspan: 3)[
-      Il limite è la full-text di PostgreSQL: valutare alternative come pg_text_search e ParadeDB (out of scope)
+      Il *limite è la full-text di PostgreSQL*: valutare alternative come *pg_text_search* e *ParadeDB* (out of scope)
       ]
   )]
 ]
@@ -307,59 +272,13 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     column-gutter: 1.5em,
     align: center + horizon,
     inset: 1em,
-        // grid.cell(colspan:2,align:bottom)[*Volume dati*:10.000 ticket, 50.000 conversation item, 60.000 attachment],
 
-    // [*Full-text* \ (e *ibrida*) \ 5-10s una volta ottimizzata],
     grid.cell(rowspan:2, colspan: 2)[#image("images/ingestion tme.jpeg",width: 90%)],
 
-    // grid.cell()[*No Block-Max WAND* \ non replicabile senza estensioni]
 
   )]
 ]
 
-
-
-
-
-// #slide(title: "Valutazione finale")[
-//   #box(height: 80%)[#grid(
-//     columns: (1fr, 1fr),
-//     column-gutter: 1.5em,
-//     align: center + horizon,
-//     inset: 2em,
-//     [*Answer rate 100%* \ ma su dataset di test],
-//     [L'accuratezza dipende da fattori trasversali],
-//     [Utile principalmente alla *diagnostica*], 
-//     [Accuratezza in un contesto reale, probabilmente più bassa: *80%* circa],
-//     grid.cell(colspan: 2)[Definizione della *ground truth* non banale]
-//   )]
-// ]
-
-
-
-
-
-// #slide(title: "Conclusioni")[
-//   #columns(2,
-//     [
-//       *Vantaggi*
-//       - *pgvector* valido per ricerca semantica/ibrida
-//       - Stack *unificato*, meno overhead
-
-//       #colbreak()
-
-//       *Limiti e sviluppi futuri*
-//       - Full-text *più lento* di Elasticsearch
-//       - Estendere i test a tutte le tipologie
-//     ],
-//   )
-
-//   Possibili soluzioni:
-
-//   Utilizzare estensioni specializzate (*ParedeDB*)
-
-//   Rivedere il ruolo della ricerca full-text
-// ]
 
 #filled-slide[
   #align(center)[#box(fill:color.white,stroke:color.black+2pt,inset: 0em)[#image("images/meme-pg.png",height: 60%)]]
