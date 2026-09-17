@@ -12,7 +12,7 @@ Sono Davide Lorenzon e oggi vi presento la mia tesi,
 
 Il progetto nasce da un'esigenza dell'azienda: oggi il sistema di ricerca si basa su due tecnologie separate, e questo comporta la gestione di 2 database e il loro allineamento.
 
-Questo approccio multi database, o persistenza poliglotta, non è raro e funziona seppur con la necessità di una maggiore complessità di coordinamento, a renderlo meno adatto è  una particolare esigenza dell'azienda che richiede l'uso di join relaizzati lato backend, 
+Questo approccio multi database, o persistenza poliglotta, non è raro e funziona seppur con la necessità di una maggiore complessità di coordinamento, a renderlo meno adatto a questo specifico sistema di ricerca è  una particolare esigenza dell'azienda che richiede l'uso di join realizzati lato backend, 
 
 questo progetto ha una finalità esplorativa.
 
@@ -26,7 +26,7 @@ a questo scopo si valuta pgvector
 
 un'estensione postgres che implementa funzionalità di ricerca semantica direttamente senza motori di ricerca o  database esterni 
 
-da poco arrivato a un grado di avanzamento sufficiente a quanto necessario all'impresa
+sta venendo valutato perché da poco arrivato a un grado di avanzamento sufficiente a quanto necessario all'impresa
 
 vanno valutate la fattibilità del suo utilizzo e le sue performance
 (sia velocità che qualità)
