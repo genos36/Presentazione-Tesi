@@ -141,8 +141,8 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     grid.cell(align:center,rowspan:5)[
       #image("images/example/semantica.drawio.png")
     ],
-    [*Partizionamento* su field_name],
     [Indice *HNSW* su bit vector],
+    [*Partizionamento* su field_name],
     [*Denormalizzazione* dei campi filterable],
     [*Oversampling* e *rescoring*],
   )]
@@ -175,9 +175,9 @@ grid.cell(colspan:2)[#text(size:1.2em)[Estensione diretta e senza altri DB ester
     align: center + horizon,
     inset: 8pt,
     [*Locust* \ simula utenti paralleli],
-    [*Grafana* \ dashboard collegata a Postgres],
+    [*Grafana* \ dashboard collegata a *Postgres*],
     [*Metriche* \ hit rate, MRR, latenza],
-    [*Ground truth* \ da dati sintetici],// TODO
+    [Basato sulla \ *Ground truth*],// TODO
     grid.cell(colspan:2,image("images/example/image.png", height: 30%))
   )
   
